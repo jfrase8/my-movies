@@ -1,7 +1,89 @@
+<!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Movies</title>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+<script defer
+	src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<style>
+		.image {
+			max-width: 100px;
+		}
+	</style>
 </head>
 <body>
-<h1>My Movies</h1>
+	<section class="section">
+		<div class="container">
+			<h1 class="title">My Movies</h1>
+			<form>
+				<div class="field">
+	  				<label class="label">Find a movie</label>
+	  				<div class="control">
+	    				<input id="searchTextBox" class="input" type="text" placeholder="Keywords">
+	 				</div>
+				</div>
+				<div class="field">
+					<div class="control">
+						<button id="searchButton" class="button is-link">Search</button>
+					</div>
+				</div>								
+			</form>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+			<div id="results" class="container">
+			</div>
+		</div>
+	</section>
+
+	<script>
+	/*
+	var buildSearchResult = function(val){
+		return '<div class="columns is-mobile is-centered is-vcentered"><div class="column"><a href="https://www.imdb.com/title/'+ val.imdbId 
+		+ '/" target="_blank"><img src="' + val.Poster
+		+ '" alt=""></a></div><div class="column"><span class="title">' + val.Title
+		+ '</span><br> <span class="subtitle">' + val.Year
+		+ '</span></div></div>';
+	};
+	*/
+
+	var buildSearchResult = function(val){
+		return '<article class="media">'
+			+ '<figure class="media-left"><p class="image"><img src="' + val.Poster + '"></p></figure>'
+			+ '<div class="media-content"><div class="content"><p><strong>' + val.Title + '</strong> <small>' + val.Year + '</small></p></div>'
+			+ '</article>';
+	};
+
+		$(function() {
+			// On page load stuff goes here
+		});
+
+		$('#searchButton').on('click', function(e) {
+			// Prevents the page from automatically reloading
+			e.preventDefault();
+
+			// Get the input typed in by the user
+			var searchText = $('#searchTextBox').val();
+
+			// Call the API on our Java server
+			$.getJSON('api/omdb/search?q=' + searchText, function(data) {
+				// API returns here with 'data'
+				var items = [];
+				$.each(data, function(key, val) {
+					items.push(buildSearchResult(val));
+				});
+
+				$('#results').html(
+						items.join(''));
+			});
+		});
+	</script>
 </body>
 </html>
